@@ -1,0 +1,1 @@
+Run from cmd ```docker build . --progress=plain --no-cache```
