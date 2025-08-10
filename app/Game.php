@@ -6,6 +6,9 @@ namespace App;
 
 final readonly class Game
 {
+    private const string X_PLAYER_MARK = "X";
+    private const string O_PLAYER_MARK = "O";
+
     /** 3x3 array with X or O elements */
     private array $game;
 
@@ -26,10 +29,10 @@ final readonly class Game
             return false;
         }
 
-        if ($this->hasRowWin("X") && $this->hasRowWin("O")) {
+        if ($this->hasRowWin(self::X_PLAYER_MARK) && $this->hasRowWin(self::O_PLAYER_MARK)) {
             return false;
         }
-        if ($this->hasColWin("X") && $this->hasColWin("O")) {
+        if ($this->hasColWin(self::X_PLAYER_MARK) && $this->hasColWin(self::O_PLAYER_MARK)) {
             return false;
         }
 
@@ -47,7 +50,8 @@ final readonly class Game
 
     public function hasProperOrderOfMoves(): bool
     {
-        list($countX, $countO) = $this->countElements();
+        $countX = $this->countMoves(self::X_PLAYER_MARK);
+        $countO = $this->countMoves(self::O_PLAYER_MARK);
 
         if (!in_array($countX, [$countO, $countO + 1])) {
             return false;
@@ -56,24 +60,19 @@ final readonly class Game
         return true;
     }
 
-    /** returns array for simplicity, in real world I would prefer DTO with known properties */
-    private function countElements(): array
+    private function countMoves(string $player): int
     {
-        $countO = 0;
-        $countX = 0;
+        $moves = 0;
 
         foreach ($this->game as $line) {
             foreach ($line as $item) {
-                if ($item === "X") {
-                    $countX++;
-                }
-                if ($item === "O") {
-                    $countO++;
+                if ($item === $player) {
+                    $moves++;
                 }
             }
         }
 
-        return [$countX, $countO];
+        return $moves;
     }
 
     public function hasRowWin(string $player): bool
